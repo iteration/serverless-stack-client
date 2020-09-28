@@ -1,11 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { AppContext } from "./libs/contextLib";
+import { onError } from "./libs/errorLib";
+import { Auth } from "aws-amplify";
 import Routes from "./Routes";
 import "./App.css";
 
 function App() {
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const history = useHistory();
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+  
+  async function onLoad() {
+    try {
+      await Auth.currentSession();
+      userHasAuthenticated(true);
+      console.info("User has current session.");
+    }
+    catch(e) {
+      if (e === 'No current user') {
+        console.info("User session not found.");
+      } else {
+        onError(e);
+      }
+    }
+  
+    setIsAuthenticating(false);
+  }
+
+  async function handleLogout() {
+    await Auth.signOut();
+  
+    userHasAuthenticated(false);
+    console.info("Logged Out!");
+    history.push("/login");
+  }
+
   return (
     <div className="App container">
       <Navbar fluid collapseOnSelect>
@@ -17,16 +53,23 @@ function App() {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-            <LinkContainer to="/signup">
-              <NavItem>Signup</NavItem>
-            </LinkContainer>
-            <LinkContainer to="/login">
-              <NavItem>Login</NavItem>
-            </LinkContainer>
+          {isAuthenticated
+              ? <NavItem onClick={handleLogout}>Logout</NavItem>
+              : <>
+                  <LinkContainer to="/signup">
+                    <NavItem>Signup</NavItem>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <NavItem>Login</NavItem>
+                  </LinkContainer>
+                </>
+            }
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <Routes />
+      <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+        <Routes />
+      </AppContext.Provider>
     </div>
   );
 }
