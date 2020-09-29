@@ -1,7 +1,8 @@
 export default {
+    MAX_ATTACHMENT_SIZE: 5000000,
     s3: {
       REGION: "us-west-2",
-      BUCKET: "arn:aws:s3:::notes-app-uploads-iteration"
+      BUCKET: "notes-app-uploads-iteration"
     },
     apiGateway: {
       REGION: "us-west-2",
