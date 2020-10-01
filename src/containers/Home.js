@@ -38,7 +38,7 @@ export default function Home() {
   function renderNotesList(notes) {
     return [{}].concat(notes).map((note, i) => 
       i !== 0 ? (
-        <LinkContainer key={note.notesId} to={`/notes/${note.notesId}`}>
+        <LinkContainer key={note.noteId} to={`/notes/${note.noteId}`}>
           <ListGroupItem header={note.content.trim().split("\n")[0]}>
             {"Created: " + new Date(note.createdAt).toLocaleString()}
           </ListGroupItem>
