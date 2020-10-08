@@ -76,8 +76,7 @@ function App() {
           </Navbar.Collapse>
         </Navbar>
         <ErrorBoundary>
-          <AppContext.Provider
-            value={{ isAuthenticated, userHasAuthenticated }}>
+          <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
             <Routes />
           </AppContext.Provider>
         </ErrorBoundary>

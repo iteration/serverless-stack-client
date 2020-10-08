@@ -1,14 +1,15 @@
 import * as Sentry from "@sentry/browser";
 
 const isLocal = process.env.NODE_ENV === "development";
+//const isLocal = false;
+
 
 export function initSentry() {
   if (isLocal) {
     return;
   }
 
-  Sentry.init({ dsn: "https://ce9db6b817c84ababf0d3b79d9264b7d@o458971.ingest.sentry.io/5457433", integrations: [ new Integrations.BrowserTracing(), ], // We recommend adjusting this value in production, or using tracesSampler // for finer control tracesSampleRate: 1.0,
-});
+  Sentry.init({ dsn: "https://ce9db6b817c84ababf0d3b79d9264b7d@o458971.ingest.sentry.io/5457433"});
 }
 
 export function logError(error, errorInfo = null) {
